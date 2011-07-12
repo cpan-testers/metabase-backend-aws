@@ -1,10 +1,9 @@
 use 5.008001;
 use strict;
 use warnings;
-use utf8;
 
 package Metabase::Backend::AWS;
-# ABSTRACT: No abstract given for Metabase::Backend::AWS
+# VERSION
 
 # Dependencies
 use autodie 2.00;
@@ -12,6 +11,8 @@ use autodie 2.00;
 1;
 
 __END__
+
+# ABSTRACT: Metabase backend implemented using Amazon Web Services
 
 =for Pod::Coverage method_names_here
 
