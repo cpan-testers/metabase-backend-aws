@@ -5,14 +5,10 @@ use warnings;
 package Metabase::Backend::AWS;
 # VERSION
 
-# Dependencies
-use autodie 2.00;
-
 1;
 
-__END__
-
 # ABSTRACT: Metabase backend implemented using Amazon Web Services
+# COPYRIGHT
 
 =for Pod::Coverage method_names_here
 
@@ -20,7 +16,7 @@ __END__
 
 = SYNOPSIS
 
-  use Metabase::Backend::AWS;
+XXX consolidate synopses from modules
 
 = DESCRIPTION
 

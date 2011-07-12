@@ -26,13 +26,16 @@ email or open a bug ticket instead of patching.
 
 Dist::Zilla is a very powerful authoring tool, but requires a number of
 author-specific plugins.  If you would like to use it for contributing,
-install it from CPAN, then run one of the following commands, depending on
-your CPAN client:
+install it from CPAN, then run one of the following commands from inside
+the distribution directory where the "dist.ini" file is
+
+  # depending on your cpan client, choose one of the following
 
   $ cpan `dzil authordeps`
   $ dzil authordeps | cpanm
 
-Once installed, here are some dzil commands you might try:
+Once installed, here are some dzil commands you might try (again, from
+inside the distribution directory):
 
   $ dzil build
   $ dzil test
