@@ -3,11 +3,13 @@ use strict;
 use warnings;
 
 package Metabase::Archive::S3;
-# ABSTRACT: Metabase storage using Amazon S3
+# VERSION
 
 use Moose;
+use namespace::autoclean;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class;
+use namespace::autoclean;
 
 use Metabase::Fact;
 use Carp       ();
@@ -18,7 +20,8 @@ use Net::Amazon::S3;
 use Path::Class ();
 use Compress::Zlib 2 qw(compress uncompress);
 
-with 'Metabase::Archive';
+with 'Metabase::Backend::AWS';
+with 'Metabase::Archive' => { -version => 0.17 };
 
 # Prefix string must have a trailing slash but not leading slash
 subtype 'PrefixStr'
@@ -27,18 +30,6 @@ subtype 'PrefixStr'
 
 coerce 'PrefixStr'
   => from 'Str' => via { s{/$}{}; s{^/}{}; $_ . "/" };
-
-has 'access_key_id' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
-
-has 'secret_access_key' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
 
 has 'bucket' => (
     is       => 'ro',
@@ -151,7 +142,8 @@ sub iterator {
 
 1;
 
-__END__
+# ABSTRACT: Metabase storage using Amazon S3
+# COPYRIGHT
 
 =for Pod::Coverage::TrustPod store extract delete iterator
 
@@ -168,37 +160,30 @@ __END__
 
 =head1 DESCRIPTION
 
-Store facts in Amazon S3.
+This is an implementation of the L<Metabase::Archive> role using Amazon S3
 
 =head1 USAGE
 
-See L<Metabase::Archive> and L<Metabase::Librarian>.
+See L<Metabase::Backend::AWS> for common constructor attributes and see below
+for constructor attributes specific to this class.  See L<Metabase::Archive>
+and L<Metabase::Librarian> for details on usage.
 
-TODO: document optional C<compressed> option (default 1) and
-C<schema> option (sensible default provided).
+=attr bucket (required)
 
-=head1 BUGS
+S3 bucket name to use for storage
 
-Please report any bugs or feature using the CPAN Request Tracker.
-Bugs can be submitted through the web interface at
-L<http://rt.cpan.org/Dist/Display.html?Queue=Metabase>
+=attr prefix (required)
 
-When submitting a bug or request, please include a test-file or a patch to an
-existing test-file that illustrates the bug or desired feature.
+S3 prefix (within the bucket) to use for storage.  This should be unique
+for each Metabase installation.
 
-=head1 COPYRIGHT AND LICENSE
+=attr compressed (deprecated)
 
-Portions Copyright (c) 2010 by Leon Brocard
+Boolean flag indicating whether facts should be compressed prior to S3
+storage.  Once facts are stored compressed or not compressed,
+this should not be changed for any given Metabase archive.
 
-Licensed under terms of Perl itself (the "License").
-You may not use this file except in compliance with the License.
-A copy of the License was distributed with this file or you may obtain a
-copy of the License from http://dev.perl.org/licenses/
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+The default is now true and this attribute deprecated.  It remains to allow
+access to older, uncompressed archives.
 
 =cut

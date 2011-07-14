@@ -3,25 +3,16 @@ use strict;
 use warnings;
 
 package Metabase::Index::SimpleDB;
-# ABSTRACT: Metabase Amazon SimpleDB index
+# VERSION
 
 use Moose;
+use namespace::autoclean;
+
 use SimpleDB::Client;
 use Try::Tiny;
 
-with 'Metabase::Index';
-
-has 'access_key_id' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
-
-has 'secret_access_key' => (
-    is       => 'ro',
-    isa      => 'Str',
-    required => 1,
-);
+with 'Metabase::Backend::AWS';
+with 'Metabase::Index' => { -version => 0.17 };
 
 has 'domain' => (
     is       => 'ro',
@@ -306,22 +297,13 @@ sub op_and {
 
 1;
 
-__END__
+# ABSTRACT: Metabase index on Amazon SimpleDB
+# COPYRIGHT
 
-=attr access_key_id (required)
+=for Pod::Coverage::TrustPod add query delete count
+translate_query op_eq op_ne op_gt op_lt op_ge op_le op_between op_like
+op_not op_or op_and
 
-An Amazon Access Key ID.
-
-=attr secret_access_key (required)
-
-The Secret Access Key that goes with the Amazon Access Key ID
-
-=attr domain (required)
-
-The SimpleDB domain to store index data in.  This should be unique for
-each Metabase installation.
-
-=for Pod::Coverage::TrustPod add search exists delete count
 
 =head1 SYNOPSIS
 
@@ -339,8 +321,14 @@ roles using Amazon SimpleDB.
 
 =head1 USAGE
 
-See below for constructor attributes.  See L<Metabase::Index>,
+See L<Metabase::Backend::AWS> for common constructor attributes and see below
+for constructor attributes specific to this class.  See L<Metabase::Index>,
 L<Metabase::Query> and L<Metabase::Librarian> for details on usage.
+
+=attr domain (required)
+
+The SimpleDB domain to store index data in.  This should be unique for
+each Metabase installation.
 
 =head1 LIMITATIONS
 
