@@ -8,11 +8,14 @@ package Metabase::Index::SimpleDB;
 use Moose;
 use namespace::autoclean;
 
+use Data::Dumper;
+use Data::Stream::Bulk::Callback;
+use List::AllUtils qw/sum/;
 use SimpleDB::Client;
 use Try::Tiny;
 
 with 'Metabase::Backend::AWS';
-with 'Metabase::Index' => { -version => 0.17 };
+with 'Metabase::Index' => { -version => 0.017 };
 
 has 'domain' => (
     is       => 'ro',
@@ -34,6 +37,13 @@ has 'simpledb' => (
         return $sdb;
     },
 );
+
+has consistent => (
+  is => 'ro',
+  isa => 'Bool',
+  default => sub { 0 },
+);
+
 
 # XXX not currently used, but available for future
 sub _format_int {
@@ -62,11 +72,11 @@ sub add {
 
     my $i = 0;
     my @attributes;
-    foreach my $key ( keys %$metadata ) {
+    foreach my $key ( sort keys %$metadata ) {
         my $value = $metadata->{$key};
         push @attributes,
             "Attribute.$i.Name"    => $key,
-            "Attribute.$i.Value"   => $value,
+            "Attribute.$i.Value"   => $value;
             # XXX not using replace is an optimization -- dagolden, 2010-04-29
 #            "Attribute.$i.Replace" => 'true'; # XXX optimization -- dagolden, 2010-04-29
         $i++;
@@ -94,15 +104,17 @@ my $_count_extractor = sub {
     $count += $i->{Attribute}{Value};
   }
 
-  return $count, $count;
+  return [$count], $count;
 };
 
 sub count {
   my ( $self, %spec) = @_;
-  my ($sql, $limit) = $self->_get_search_sql("select count(*)", \%spec );
-  return Data::Stream::Bulk::Callback->new(
-    callback => $self->_get_fetch_callback($sql, $limit, $_count_extractor)
+  my $query = "select count(*)";
+  my ($sql, $limit) = $self->_get_search_sql($query, \%spec );
+  my $cb = Data::Stream::Bulk::Callback->new(
+    callback => $self->_generate_fetch_callback($sql, $limit, $_count_extractor)
   );
+  return sum $cb->all; 
 }
 
 my $_item_extractor = sub {
@@ -118,27 +130,33 @@ my $_item_extractor = sub {
 
 sub query {
   my ( $self, %spec) = @_;
-  my ($sql, $limit) = $self->_get_search_sql("select ItemName()", \%spec );
+  my $query = "select ItemName()";
+  my ($sql, $limit) = $self->_get_search_sql($query, \%spec );
   return Data::Stream::Bulk::Callback->new(
-    callback => $self->_get_fetch_callback($sql, $limit, $_item_extractor)
+    callback => $self->_generate_fetch_callback($sql, $limit, $_item_extractor)
   );
 }
 
 sub _generate_fetch_callback {
   my ($self, $sql, $limit, $extractor) = @_;
     # prepare request
-  my $request = { SelectExpression => $sql };
+  my $request = {
+    SelectExpression => $sql,
+    ConsistentRead => ($self->consistent ? "true" : "false"),
+  };
   my $total_count = 0;
   my $finished = 0;
 
   return sub {
-    return [] if $finished;
+    return if $finished;
     FETCH: {
       my ($response, $result, $query_count);
       try {
-        $response = $self->simpledb->send_request( 'Select', $request )
+#        warn "Request: $sql\n";
+        $response = $self->simpledb->send_request( 'Select', $request );
+#        warn "Response: " . Dumper($response) . "\n";
       } catch {
-        Carp::confess("Got error '$_' from '$sql'");
+        die("Got error '$_' from '$sql'");
       };
 
       if ( exists $response->{SelectResult}{Item} ) {
@@ -191,7 +209,7 @@ sub _quote_field {
   return qq{`$field`};
 }
 
-sub _quote_value {
+sub _quote_val {
   my ($self, $value) = @_;
   $value =~ s{"}{""}g;
   return qq{"$value"};
@@ -329,6 +347,11 @@ L<Metabase::Query> and L<Metabase::Librarian> for details on usage.
 
 The SimpleDB domain to store index data in.  This should be unique for
 each Metabase installation.
+
+=attr consistent
+
+Whether consistent reads should be used. Default is 0.  Probably
+most useful for testing.
 
 =head1 LIMITATIONS
 
