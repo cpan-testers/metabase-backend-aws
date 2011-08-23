@@ -278,7 +278,7 @@ sub op_ge {
 
 sub op_le {
   my ($self, $field, $val) = @_;
-  return $self->_quote_field($field) . " <=" . $self->_quote_val($val);
+  return $self->_quote_field($field) . " <= " . $self->_quote_val($val);
 }
 
 sub op_between {
