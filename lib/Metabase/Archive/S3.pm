@@ -21,7 +21,7 @@ use Path::Class ();
 use Compress::Zlib 2 qw(compress uncompress);
 
 with 'Metabase::Backend::AWS';
-with 'Metabase::Archive' => { -version => 0.17 };
+with 'Metabase::Archive' => { -version => 0.017 };
 
 # Prefix string must have a trailing slash but not leading slash
 subtype 'PrefixStr'
@@ -74,6 +74,8 @@ has '_json' => (
   lazy => 1,
   default => sub { JSON->new->ascii },
 );
+
+sub initialize {}
 
 # given fact, store it and return guid;
 sub store {
