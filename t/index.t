@@ -2,27 +2,13 @@ use 5.010;
 use strict;
 use warnings;
 
-# XXX monkeypatching
-use Data::Dumper;
-use LWP::UserAgent ();
-my $orig_request;
-BEGIN {
-  no warnings 'redefine';
-  $orig_request = \&LWP::UserAgent::request;
-  *LWP::UserAgent::request = sub {
-#    warn "REQUEST " . Dumper($_[1]) . "\n";
-    my $response = $orig_request->(@_);
-#    warn "RESPONSE " . Dumper($response) . "\n";
-    return $response;
-  }
-}
 use Test::More;
 use Test::Routine;
 use Test::Routine::Util;
 use Net::Amazon::Config;
 use Metabase::Index::SimpleDB;
 
-
+# help us clean up our database
 local $SIG{INT} = sub { warn "Got SIGINT"; exit 1 };
 
 my $profile_env = "PERL_METABASE_TEST_AWS_PROFILE";

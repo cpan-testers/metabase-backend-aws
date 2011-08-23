@@ -152,9 +152,7 @@ sub _generate_fetch_callback {
     FETCH: {
       my ($response, $result, $query_count);
       try {
-#        warn "Request: $sql\n";
         $response = $self->simpledb->send_request( 'Select', $request );
-#        warn "Response: " . Dumper($response) . "\n";
       } catch {
         die("Got error '$_' from '$sql'");
       };
