@@ -44,6 +44,7 @@ has consistent => (
   default => sub { 0 },
 );
 
+sub initialize {}
 
 # XXX not currently used, but available for future
 sub _format_int {
