@@ -7,6 +7,7 @@ use Test::Routine;
 use Test::Routine::Util;
 use Net::Amazon::Config;
 use Metabase::Index::SimpleDB;
+use Metabase::Test::Index;
 
 use lib "t/lib";
 

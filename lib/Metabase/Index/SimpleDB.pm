@@ -318,7 +318,7 @@ sub op_and {
 # COPYRIGHT
 
 =for Pod::Coverage::TrustPod add query delete count
-translate_query op_eq op_ne op_gt op_lt op_ge op_le op_between op_like
+initialize translate_query op_eq op_ne op_gt op_lt op_ge op_le op_between op_like
 op_not op_or op_and
 
 
@@ -361,7 +361,7 @@ API.  Specifically:
 
 =item lexicographic comparison
 
-All comparisons are done lexicographically, even when the field or comparision
+All comparisons are done lexicographically, even when the field or comparison
 value appears to be a number.
 
 =item -order

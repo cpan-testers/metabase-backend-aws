@@ -7,6 +7,7 @@ use Test::Routine;
 use Test::Routine::Util;
 use Net::Amazon::Config;
 use Metabase::Archive::S3;
+use Metabase::Test::Archive;
 
 # help us clean up our database
 local $SIG{INT} = sub { warn "Got SIGINT"; exit 1 };
