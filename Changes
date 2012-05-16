@@ -2,5 +2,7 @@ Revision history for Metabase-Backend-AWS
 
 {{$NEXT}}
 
+1.000     2012-05-16 13:41:41 America/New_York
+
     - Split out from the Metabase distribution
 
