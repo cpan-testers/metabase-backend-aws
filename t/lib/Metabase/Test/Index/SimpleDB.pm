@@ -8,6 +8,7 @@ use Test::Routine;
 use Net::Amazon::Config;
 use Metabase::Index::SimpleDB;
 
+# a profile name in a Net::Amazon::Config file
 my $profile_env = "PERL_METABASE_TEST_AWS_PROFILE";
 unless ( $ENV{$profile_env} ) {
   plan skip_all => "No \$ENV{$profile_env} provided for testing";

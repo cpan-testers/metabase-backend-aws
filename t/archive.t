@@ -12,6 +12,7 @@ use Metabase::Test::Archive;
 # help us clean up our database
 local $SIG{INT} = sub { warn "Got SIGINT"; exit 1 };
 
+# a profile name in a Net::Amazon::Config file
 my $profile_env = "PERL_METABASE_TEST_AWS_PROFILE";
 unless ( $ENV{$profile_env} ) {
   plan skip_all => "No \$ENV{$profile_env} provided for testing";
