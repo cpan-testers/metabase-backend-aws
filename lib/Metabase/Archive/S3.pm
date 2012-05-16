@@ -21,7 +21,7 @@ use Path::Class ();
 use Compress::Zlib 2 qw(compress uncompress);
 
 with 'Metabase::Backend::AWS';
-with 'Metabase::Archive' => { -version => 0.017 };
+with 'Metabase::Archive' => { -version => 1.000 };
 
 # Prefix string must have a trailing slash but not leading slash
 subtype 'PrefixStr'

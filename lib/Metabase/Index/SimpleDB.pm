@@ -15,7 +15,7 @@ use SimpleDB::Client;
 use Try::Tiny;
 
 with 'Metabase::Backend::AWS';
-with 'Metabase::Index' => { -version => 0.017 };
+with 'Metabase::Index' => { -version => 1.000 };
 
 has 'domain' => (
     is       => 'ro',
