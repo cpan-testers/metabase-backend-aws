@@ -1,5 +1,6 @@
 Revision history for Metabase-Backend-AWS
 
 {{$NEXT}}
-    -
+
+    - Split out from the Metabase distribution
 

@@ -40,9 +40,9 @@
             "Data::Stream::Bulk::Filter" : "0.08",
             "JSON" : "2",
             "List::AllUtils" : "0",
-            "Metabase::Archive" : "0.017",
+            "Metabase::Archive" : "1",
             "Metabase::Fact" : "0",
-            "Metabase::Index" : "0.017",
+            "Metabase::Index" : "1",
             "Moose" : "0",
             "Moose::Role" : "0",
             "Moose::Util::TypeConstraints" : "0",
@@ -76,15 +76,15 @@
    "provides" : {
       "Metabase::Archive::S3" : {
          "file" : "lib/Metabase/Archive/S3.pm",
-         "version" : "0.001"
+         "version" : "1.000"
       },
       "Metabase::Backend::AWS" : {
          "file" : "lib/Metabase/Backend/AWS.pm",
-         "version" : "0.001"
+         "version" : "1.000"
       },
       "Metabase::Index::SimpleDB" : {
          "file" : "lib/Metabase/Index/SimpleDB.pm",
-         "version" : "0.001"
+         "version" : "1.000"
       }
    },
    "release_status" : "stable",
@@ -100,6 +100,6 @@
          "web" : "https://github.com/dagolden/metabase-backend-aws"
       }
    },
-   "version" : "0.001"
+   "version" : "1.000"
 }
 
